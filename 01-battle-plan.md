@@ -34,7 +34,7 @@ Now upon clicking the image you should be authenticated in Facebook. When authen
 
 ### Displaying logged-in user name
 
-Ok, to handle more pages in your app you will need a [`{ custom : ... }`](http://doc.opalang.org/#!/refcard/Standard-library/Web-features/Server) server along with an URL dispatcher. Such a dispatcher is a *parser* that takes an URL and produces a resource for it. If you're feeling adventerous then you can read some [blog articles on parsing](http://blog.opalang.org/search/label/parsing) (start with the oldest and work your way backwards) and write this parser yourself. Otherwise here's the hint:
+Ok, to handle more pages in your app you will need a [`{ custom : ... }`](http://doc.opalang.org/#!/refcard/Standard-library/Web-features/Server) server along with an URL dispatcher. Such a dispatcher is a *parser* that takes an URL and produces a resource for it. If you're feeling adventurous then you can read some [blog articles on parsing](http://blog.opalang.org/search/label/parsing) (start with the oldest and work your way backwards) and write this parser yourself. Otherwise here's the hint:
 
     dispatcher = parser {
     case "/connect?" data=(.*) -> Resource.html("Connected!", connect_page(data))
@@ -45,4 +45,18 @@ which calls `connect_page` with Facebook token as an argument, for the Facebook 
 
 As a next step you need to convert the `data` page argument into a valid Facebook token, with the [`get_token_raw`](http://doc.opalang.org/#!/value/stdlib.apis.facebook.auth/FbAuth/get_token_raw) function.
 
-Once you have a valid token you can get the user's name with the [`object`](http://doc.opalang.org/#!/value/stdlib.apis.facebook.graph/FbGraph/Read/object) function of the [`Read`](http://doc.opalang.org/#!/module/stdlib.apis.facebook.graph/FbGraph/Read) module, submodule of the [`FbGraph`](http://doc.opalang.org/#!/module/stdlib.apis.facebook.graph/FbGraph) module. You can put `"me"` as the first argument and [`FbGraph.Read.default_object`](http://doc.opalang.org/#!/value/stdlib.apis.facebook.graph/FbGraph/Read/default_object) with a valid token as the second argument. You will need to extract the data you want from the JSON object that you will get as response; to learn more about the format go an check the [Facebook Graph API Explorer](https://developers.facebook.com/tools/explorer/?method=GET&path=me).
+Once you have a valid token you can get the user's name with the [`FbGraph.Read.object`](http://doc.opalang.org/#!/value/stdlib.apis.facebook.graph/FbGraph/Read/object) function, as follows:
+
+    FbGraph.Read.object("me", {FbGraph.Read.default_object with token: ...})
+
+You will need to extract the data you want from the JSON object that you will get as response; to learn more about the format go an check the [Facebook Graph API Explorer](https://developers.facebook.com/tools/explorer/?method=GET&path=me).
+
+### Displaying the grid of friends
+
+You can obtain user's friends in a similar way to getting user's name. Try it in the [API explorer](https://developers.facebook.com/tools/explorer/?method=GET&path=me%2Ffriends) and do the same in Opa with:
+
+    FbGraph.Read.connection("me", "friends", token, FbGraph.default_paging)
+
+Again you will need to do a bit of JSON magickery to get the data you need, but this time working with [lists](http://doc.opalang.org/#!/refcard/Standard-library/Containers/list).
+
+You can present the thumbnails for instance using [Bootstrap's Thumbnails](http://twitter.github.com/bootstrap/components.html#thumbnails) markup, put within an [Bootstrap Alert](http://twitter.github.com/bootstrap/components.html#alerts) window.
