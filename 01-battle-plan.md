@@ -7,26 +7,30 @@ The goal is to develop a simple Facebook-connectivity app. It should consist of 
 
 2. second screen, which should contain a nicely presented grid with thumbnails of all the friends of the logged-in user, along with their names.
 
-The [Reference card](http://doc.opalang.org/#!/refcard) can be of great help to quickly get up-and-running with Opa. Good luck!
+Below is the rough sketch of the steps you will need to complete to develop this app. Of course you don't need to follow them tightly but doing so will provide you with guidance at every steps. Oh, and don't worry -- you won't be able to complete all steps in the alloted 1 hour... unless you're a serious code ninja.
+
+The [Reference card](http://doc.opalang.org/#!/refcard) can be of great help to quickly get up-and-running with Opa.
+
+Good luck!
 
 Plan
 ----
 
 ### First screen
 
-Let's first create the static first screen. For the Facebook sign-in button you can use this image: ![Facebook sign-in](https://github.com/akoprow/opa-devcamp-facebook/raw/master/03-solution/resources/fb_connect.png). You'll need to use a server that embeds it as part of application resources: learn how to do that from the [RefCard](http://doc.opalang.org/#!/refcard/Standard-library/Web-features/Server).
+Let's first create the first static screen. For the Facebook sign-in button you can use this image: ![Facebook sign-in](https://github.com/akoprow/opa-devcamp-facebook/raw/master/03-solution/resources/fb_connect.png). You'll need to use a server that embeds it as part of the application resources: learn how to do that from the [RefCard](http://doc.opalang.org/#!/refcard/Standard-library/Web-features/Server).
 
 ### Set-up Facebook app
 
-To connect with Facebook you need to first create a Facebook app that you will be connecting to. Go to https://developers.facebook.com to do that. Mark the `Website` tick and put there the URL at which you'll deploy the app. *This is important*. For security reasons Facebook will only redirect back to this URL. If you're going to deploy locally, just put `localhost:8080` in that field. Note down the `App ID` and `App secret` as you'll need them in the next step.
+To connect with Facebook you need to first create a Facebook app that you will be connecting to. Go to https://developers.facebook.com to do that. Mark the `Website` tick and put there the URL at which you'll deploy the app. **This is important**. For security reasons Facebook will only redirect back to this URL. If you're going to deploy locally, just put `localhost:8080` in that field. Note down the `App ID` and `App secret` as you'll need them in the next step.
 
 ### Set-up Facebook authentication
 
-You will need a bunch of Facebook libraries
+You will need a bunch of Facebook libraries, so import them first.
 
     import stdlib.apis.{facebook, facebook.auth, facebook.graph}
 
-and a record with [`Facebook.config`](http://doc.opalang.org/#!/type/stdlib.apis.facebook/Facebook/config) -- you can fill it in using the data from the previous step.
+Now you need to create a record with [`Facebook.config`](http://doc.opalang.org/#!/type/stdlib.apis.facebook/Facebook/config) -- you can fill it in using the data from the previous step. Both `app_id` and `api_key` should be the same and correspond to `App ID` in Facebook.
 
 Now use the [`user_login_url`](http://doc.opalang.org/#!/value/stdlib.apis.facebook.auth/FbAuth/user_login_url) function from the [`FbAuth`](http://doc.opalang.org/#!/module/stdlib.apis.facebook.auth/FbAuth) module to get the URL to which to re-direct for Facebook authentication and put an anchor (`<a>`) with that URL on top of the `Sign in with Facebook` image. For this tutorial you can use an empty list of requested permissions and a re-direct to `http://localhost:8080/connect` (if you deploy locally).
 
@@ -34,14 +38,14 @@ Now upon clicking the image you should be authenticated in Facebook. When authen
 
 ### Displaying logged-in user name
 
-Ok, to handle more pages in your app you will need a [`{ custom : ... }`](http://doc.opalang.org/#!/refcard/Standard-library/Web-features/Server) server along with an URL dispatcher. Such a dispatcher is a *parser* that takes an URL and produces a resource for it. If you're feeling adventurous then you can read some [blog articles on parsing](http://blog.opalang.org/search/label/parsing) (start with the oldest and work your way backwards) and write this parser yourself. Otherwise here's the hint:
+Ok, to handle more pages in your app you will need a [`{ custom : ... }`](http://doc.opalang.org/#!/refcard/Standard-library/Web-features/Server) server along with an URL dispatcher. Such a dispatcher is a *parser* that takes an URL and produces a resource for it. If you're feeling adventurous then you can read some [blog articles on parsing in Opa](http://blog.opalang.org/search/label/parsing) (start with the oldest and work your way backwards) and write this parser yourself. Otherwise here's how it could look like:
 
     dispatcher = parser {
-    case "/connect?" data=(.*) -> Resource.html("Connected!", connect_page(data))
+    case "/connect?" data=(.*) -> Resource.html("Connected!", connect_page(Text.to_string(data)))
     case .* -> Resource.html("Connect to FB", main())
     }
 
-which calls `connect_page` with Facebook token as an argument, for the Facebook connection URL and the `main` page for all other requests. Both those functions should return HTML of the page.
+which calls `connect_page` with Facebook token as an argument for the Facebook connection URL and the `main` page for all other requests. Both those functions should return HTML content of the page.
 
 As a next step you need to convert the `data` page argument into a valid Facebook token, with the [`get_token_raw`](http://doc.opalang.org/#!/value/stdlib.apis.facebook.auth/FbAuth/get_token_raw) function.
 
@@ -49,7 +53,7 @@ Once you have a valid token you can get the user's name with the [`FbGraph.Read.
 
     FbGraph.Read.object("me", {FbGraph.Read.default_object with token: ...})
 
-You will need to extract the data you want from the JSON object that you will get as response; to learn more about the format go an check the [Facebook Graph API Explorer](https://developers.facebook.com/tools/explorer/?method=GET&path=me).
+You will need to extract the data you want from the JSON object that you will get as response; to learn more about the format go an check the [Facebook Graph API Explorer](https://developers.facebook.com/tools/explorer/?method=GET&path=me) and [Opa's JSON](http://doc.opalang.org/#!/type/stdlib.core.rpc.core/RPC/Json/json) data-type.
 
 ### Displaying the grid of friends
 
