@@ -25,11 +25,11 @@ To get started we need to create our app's profile on Facebook. To do that go to
 
 ![Facebook Developer topbar](https://github.com/akoprow/opa-devcamp-facebook/raw/master/img/fb_topbar.png)
 
-Go the Apps (highlighted in the above screenshot) and choose ``Create New App''.
+Go the Apps (highlighted in the above screenshot) and choose `Create New App`.
 
 ![Facebook Developer new app](https://github.com/akoprow/opa-devcamp-facebook/raw/master/img/fb_new_app.png)
 
-That will open a dialog with basic info about the new application. For now just put `OpaIntro1` as _App display name_ (we'd prefer something like 'HelloFacebook', but using Facebook trademarks in app names is prohibited) and agree to the Facebook Platform Policies (preferably, after reading ;).
+That will open a dialog with basic info about the new application. For now just put `OpaIntro1` as _App display name_ (we'd prefer something like `HelloFacebook`, but using Facebook trademarks in app names is prohibited) and agree to the Facebook Platform Policies (preferably, after reading ;).
 
 ![Facebook Developer new app dialog](https://github.com/akoprow/opa-devcamp-facebook/raw/master/img/fb_new_app_dialog.png)
 
@@ -37,7 +37,7 @@ Then (possibly after answering a Captcha) you will be presented with the followi
 
 ![Facebook Developer app settings](https://github.com/akoprow/opa-devcamp-facebook/raw/master/img/fb_app_settings.png)
 
-Firstly note on the top of the screen the ``App ID'' and ``App Secret'' (they're blurred in the screenshot as the secret *should not be shared* with anyone) -- we will need those values in a minute. Then in the ``Select how your app integrates with Facebook'' section (bottom of the screen; note that we cut out the ``Basic info'' and ``Cloud services'' sections of the settings in the screenshot) select the ``Website'' mark, put the URL at which your application will be hosted -- it's important to get that right as the Facebook login will only redirect to this site's URL -- and click ``Save changes''. If you will be testing your application locally, on the default port of Opa (`8080`) then you should put as an URL: `http://localhost:8080`
+Firstly note on the top of the screen the `App ID` and `App Secret` (they're blurred in the screenshot as the secret *should not be shared* with anyone) -- we will need those values in a minute. Then in the `Select how your app integrates with Facebook` section (bottom of the screen; note that we cut out the `Basic info` and `Cloud services` sections of the settings in the screenshot) select the `Website` mark, put the URL at which your application will be hosted -- it's important to get that right as the Facebook login will only redirect to this site's URL -- and click `Save changes`. If you will be testing your application locally, on the default port of Opa (`8080`) then you should put as an URL: `http://localhost:8080`
 
 Ok, we're all set on the Facebook side; now let's do some Opa coding!
 
@@ -59,7 +59,7 @@ Then we need to fill in some basic info about the application; we'll put this in
         }
     }}
 
-Of course the x's need to be replaced with the real data here -- `app_id` and `app_key` are the same (there used to be a distinction) and correspond to ``App ID'' in the Facebook settings screen, whereas `app_secret` is the value of ``App secret''.
+Of course the x's need to be replaced with the real data here -- `app_id` and `app_key` are the same (there used to be a distinction) and correspond to `App ID` in the Facebook settings screen, whereas `app_secret` is the value of `App secret`.
 
 Now we initialize the authentication module with this configuration, make an abbreviation for the Facebook Graph module and define the redirect URL -- this is where Facebook will redirect after authenticating the user.
 
