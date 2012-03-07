@@ -120,7 +120,7 @@ Now we want to read this configuration upon starting the program and if it's mis
 
     import stdlib.system
     
-    server config =
+    server protected config =
       match (?/facebook_config) {
       case {some: config}: config
       default:
@@ -131,7 +131,7 @@ Now we want to read this configuration upon starting the program and if it's mis
         System.exit(1)
       }
 
-We declare a global value `config`, so it will be initialized before server execution. Instead of a regular DB read `/facebook_config` we prefix it with question mark (`?`), which results in returning an option type, with `none` given if the value of the given database path has not been initialized (regular read, would just return default value here). Finally we use the `Log` to display the error message and quit the program with `System.exit` (that's what we needed the `stdlib.system` import for).
+We declare a global value `config`, so it will be initialized before server execution; we also make it `server protected` to make sure it cannot be accessed by the client. Instead of a regular DB read `/facebook_config` we prefix it with question mark (`?`), which results in returning an option type, with `none` given if the value of the given database path has not been initialized (regular read, would just return default value here). Finally we use the `Log` to display the error message and quit the program with `System.exit` (that's what we needed the `stdlib.system` import for).
 
 Ok, now it's time to actually handle the `--fb-config` command line argument that we mentioned in the error message. Command line arguments in Opa applications are grouped into families (each family grouping arguments for a certain type of app functionality). We will now describe such a family:
 
