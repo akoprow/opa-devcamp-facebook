@@ -13,6 +13,8 @@ The [Reference card](http://doc.opalang.org/#!/refcard) can be of great help to 
 
 Good luck!
 
+P.S. If you want to get in touch with me write to: Adam.Koprowski@mlstate.com or give me a shout on Twitter: [@akoprowski](http://twitter.com/akoprowski).
+
 Plan
 ----
 
@@ -64,3 +66,13 @@ You can obtain user's friends in a similar way to getting user's name. Try it in
 Again you will need to do a bit of JSON magickery to get the data you need, but this time working with [lists](http://doc.opalang.org/#!/refcard/Standard-library/Containers/list).
 
 You can present the thumbnails for instance using [Bootstrap's Thumbnails](http://twitter.github.com/bootstrap/components.html#thumbnails) markup, put within an [Bootstrap Alert](http://twitter.github.com/bootstrap/components.html#alerts) window.
+
+### Storing configuration externally
+
+So far we were storing Facebook configuration (App ID and key) in the source code of the application. You may have realized that this is not ideal, as we may want to distribute the sources of our app, but **one should never disclose the secret key**.
+
+One solution is to store the configuration in application's database and initialize it via command line arguments.
+
+If you've gotten that far you should congratulate yourself, as I don't think it's realistic to do all of the above in under 1h in a programming language one does not know (yet).
+
+That also means that you probably need a challenge! So for this task I'm not going to provide much detail I'll just point you to the [Database chapter in the manual](http://doc.opalang.org/#!/manual/Hello--database) and mention that you should be using the [CommandLine module](http://doc.opalang.org/#!/module/stdlib.core.args/CommandLine) for processing command line arguments.
